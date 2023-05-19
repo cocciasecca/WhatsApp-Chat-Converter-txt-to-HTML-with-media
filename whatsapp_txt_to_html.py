@@ -7,9 +7,9 @@ def convert_media(message, media_dir):
     if media:
         media = media.group()
         if media.endswith(('webp', 'jpg', 'mp4')):
-            return f'<br><img src="{os.path.join(media_dir, media)}" width="200"><br>'
+            return f'<br><img src="./media/{media}" width="200"><br>'
         elif media.endswith('opus'):
-            return f'<audio controls><source src="{os.path.join(media_dir, media)}" type="audio/ogg"></audio><br>'
+            return f'<audio controls><source src="./media/{media}" type="audio/ogg"></audio><br>'
         elif 'file non presente' in media:
             return f'<div style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px; text-align: left; display: inline-block;">File non presente ({media})</div><br>'
     return ''
@@ -25,7 +25,7 @@ def generate_html(chat_file, title, user_name):
         for line in file:
             line = line.strip()
             if line:
-                message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?): (.*)', line)
+                message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
                 if message_match:
                     date, time, sender, content = message_match.groups()
                     participants.add(sender)
@@ -42,7 +42,10 @@ def generate_html(chat_file, title, user_name):
                         date_html = f'<div class="date" style="text-align: center; background-color: rgb(33, 33, 33); border-radius: 10px; padding: 5px; margin-bottom: 10px;">{date}</div>'
                         messages.append(date_html)
 
-                    if sender == user_name:
+                    if content == '':
+                        align = 'center'
+                        sender_html = f'<strong><span style="color: white;">{sender}</span></strong>'
+                    elif sender == user_name:
                         align = 'right'
                         sender_html = f'<strong><span style="color: {color};">{sender}</span> - <span style="color: white;">{time}</span></strong>'
                     else:
