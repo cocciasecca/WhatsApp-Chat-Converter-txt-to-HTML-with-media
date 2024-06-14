@@ -6,6 +6,8 @@ def convert_media(message, media_dir):
     media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4))', message)
     if media:
         media = media.group()
+        if media == '<Media omessi>':
+            return '*Media omessi*<br>'
         if media.endswith(('webp', 'jpg', 'mp4')):
             return f'<br><img src="./media/{media}" width="200"><br>'
         elif media.endswith('opus'):
@@ -22,6 +24,7 @@ def generate_html(chat_file, title, user_name):
 
     with open(chat_file, 'r', encoding='utf-8') as file:
         current_date = None
+        previous_line_was_message = False
         for line in file:
             line = line.strip()
             if line:
@@ -29,19 +32,19 @@ def generate_html(chat_file, title, user_name):
                 if message_match:
                     date, time, sender, content = message_match.groups()
                     participants.add(sender)
-
+    
                     if sender not in participant_colors:
                         # Assegna un colore casuale al partecipante
                         rgb = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                         participant_colors[sender] = f'rgb{rgb}'
-
+    
                     color = participant_colors[sender]
-
+    
                     if current_date != date:
                         current_date = date
                         date_html = f'<div class="date" style="text-align: center; background-color: rgb(33, 33, 33); border-radius: 10px; padding: 5px; margin-bottom: 10px;">{date}</div>'
                         messages.append(date_html)
-
+    
                     if content == '':
                         align = 'center'
                         sender_html = f'<strong><span style="color: white;">{sender}</span></strong>'
@@ -51,16 +54,25 @@ def generate_html(chat_file, title, user_name):
                     else:
                         align = 'left'
                         sender_html = f'<strong><span style="color: {color};">{sender}</span> - <span style="color: white;">{time}</span></strong>'
-
+    
                     media_html = convert_media(content, media_dir)
-                    content = content.replace('(file allegato)', '').strip()
-                    content = media_html if media_html else content
-
+                    if media_html:
+                        content = media_html
+                    elif content == '<Media omessi>':
+                        content = '*Media omessi*'
+    
                     message_html = f'<div class="message" style="text-align: {align};">'
                     message_html += f'<div class="content" style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px;">'
                     message_html += f'{sender_html}<br>{content}'
                     message_html += f'</div></div>'
                     messages.append(message_html)
+    
+                    previous_line_was_message = True
+                else:
+                    if previous_line_was_message:
+                        messages[-1] = messages[-1].replace('</div></div>', f'<br>{line}</div></div>')
+                    else:
+                        previous_line_was_message = False
 
     html = f'''
     <!DOCTYPE html>
