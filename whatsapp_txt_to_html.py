@@ -3,13 +3,15 @@ import re
 import random
 
 def convert_media(message, media_dir):
-    media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4))', message)
+    media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4|3gp))', message)
     if media:
         media = media.group()
         if media == '<Media omessi>':
             return '*Media omessi*<br>'
-        if media.endswith(('webp', 'jpg', 'mp4')):
+        if media.endswith(('webp', 'jpg')):
             return f'<br><img src="./media/{media}" width="200"><br>'
+        elif media.endswith(('mp4', '3gp')):
+            return f'<br><video width="200" controls><source src="./media/{media}" type="video/{media[-3:]}"></video><br>'
         elif media.endswith('opus'):
             return f'<audio controls><source src="./media/{media}" type="audio/ogg"></audio><br>'
         elif 'file non presente' in media:
