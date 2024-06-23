@@ -1,4 +1,4 @@
-# WhatsApp-Chat-Converter-txt-to-HTML
+# WhatsApp Chat Converter
 
 Are you tired of dealing with the hassle of converting your old WhatsApp chats into a more readable format? I mean, who wants to keep those cluttered and unreadable TXT exports, right? Well, fret no more! We have the perfect solution for you: an amazing tool crafted with the assistance of Chat-GPT.
 
