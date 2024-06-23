@@ -2,10 +2,16 @@ import os
 import re
 import random
 
-def convert_media(message, media_dir):
-    media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4|3gp))', message)
+def convert_media(message, media_dir, platform):
+    if platform == 'i':
+        media = re.search(r'<allegato: (.*?)>', message)
+    elif platform == 'a':
+        media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4|3gp))', message)
+    else:
+        media = None
+
     if media:
-        media = media.group()
+        media = media.group(1) if platform == 'i' else media.group()
         if media == '<Media omessi>':
             return '*Media omessi*<br>'
         if media.endswith(('webp', 'jpg')):
@@ -14,14 +20,14 @@ def convert_media(message, media_dir):
             return f'<br><video width="200" controls><source src="./media/{media}" type="video/{media[-3:]}"></video><br>'
         elif media.endswith('opus'):
             return f'<audio controls><source src="./media/{media}" type="audio/ogg"></audio><br>'
-        elif 'file non presente' in media:
+        else:
             return f'<div style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px; text-align: left; display: inline-block;">File non presente ({media})</div><br>'
     return ''
 
-def generate_html(chat_file, title, user_name):
+def generate_html(chat_file, title, user_name, platform):
     media_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media')
     participants = set()
-    participant_colors = {}  # Mappa per memorizzare i colori dei partecipanti
+    participant_colors = {}
     messages = []
 
     with open(chat_file, 'r', encoding='utf-8') as file:
@@ -30,45 +36,56 @@ def generate_html(chat_file, title, user_name):
         for line in file:
             line = line.strip()
             if line:
-                message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
+                if platform == 'a':
+                    message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
+                elif platform == 'i':
+                    message_match = re.search(r'\[(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}):\d{2}\] (.*?)(?=:|$)(?:: )?(.*)', line)
+                else:
+                    message_match = None
+
                 if message_match:
                     date, time, sender, content = message_match.groups()
                     participants.add(sender)
-    
+
                     if sender not in participant_colors:
-                        # Assegna un colore casuale al partecipante
                         rgb = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                         participant_colors[sender] = f'rgb{rgb}'
-    
+
                     color = participant_colors[sender]
-    
+
                     if current_date != date:
                         current_date = date
                         date_html = f'<div class="date" style="text-align: center; background-color: rgb(33, 33, 33); border-radius: 10px; padding: 5px; margin-bottom: 10px;">{date}</div>'
                         messages.append(date_html)
-    
-                    if content == '':
+
+                    if content == '' and platform == 'a': # General group message on Android
                         align = 'center'
                         sender_html = f'<strong><span style="color: white;">{sender}</span></strong>'
+                    elif sender == title and platform == 'i': # General group message on iOS
+                        align = 'center'
+                        sender_html = f'<strong><span style="color: white;">{content}</span></strong>'
                     elif sender == user_name:
                         align = 'right'
                         sender_html = f'<strong><span style="color: {color};">{sender}</span> - <span style="color: white;">{time}</span></strong>'
                     else:
                         align = 'left'
                         sender_html = f'<strong><span style="color: {color};">{sender}</span> - <span style="color: white;">{time}</span></strong>'
-    
-                    media_html = convert_media(content, media_dir)
+
+                    media_html = convert_media(content, media_dir, platform)
                     if media_html:
                         content = media_html
                     elif content == '<Media omessi>':
                         content = '*Media omessi*'
-    
+
                     message_html = f'<div class="message" style="text-align: {align};">'
                     message_html += f'<div class="content" style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px;">'
-                    message_html += f'{sender_html}<br>{content}'
+                    if sender == title:
+                        message_html += f'{sender_html}'
+                    else:
+                        message_html += f'{sender_html}<br>{content}'
                     message_html += f'</div></div>'
                     messages.append(message_html)
-    
+
                     previous_line_was_message = True
                 else:
                     if previous_line_was_message:
@@ -93,29 +110,25 @@ def generate_html(chat_file, title, user_name):
                 color: #ffffff;
                 zoom: 125%;
             }}
-
             .container {{
                 margin: 0 auto;
                 padding: 10px;
                 background-color: transparent;
             }}
-
             .messages {{
                 overflow-y: scroll;
+                height: 600px;
                 padding: 10px;
             }}
-
             .message {{
                 margin-bottom: 10px;
             }}
-
             .content {{
                 background-color: rgb(64, 65, 78);
                 border-radius: 10px;
                 padding: 5px;
                 display: inline-block;
             }}
-
             .date {{
                 text-align: center;
                 margin-top: 20px;
@@ -140,11 +153,12 @@ def generate_html(chat_file, title, user_name):
 
     return html
 
+platform = input("La chat è stata esportata da Android o iOS? (A/i): ").strip().lower()
 chat_file = 'chat.txt'
 title = input("Inserisci il titolo della chat (premere Invio per usare il valore predefinito 'Chat WhatsApp'): ") or 'Chat WhatsApp'
 user_name = input("Inserisci il tuo nome: ")
 
-html = generate_html(chat_file, title, user_name)
+html = generate_html(chat_file, title, user_name, platform)
 
 with open('chat.html', 'w', encoding='utf-8') as file:
     file.write(html)
