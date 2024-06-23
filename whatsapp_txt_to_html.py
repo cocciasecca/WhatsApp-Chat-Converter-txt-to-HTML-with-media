@@ -102,7 +102,6 @@ def generate_html(chat_file, title, user_name):
 
             .messages {{
                 overflow-y: scroll;
-                height: 600px;
                 padding: 10px;
             }}
 
