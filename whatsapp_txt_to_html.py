@@ -153,12 +153,22 @@ def generate_html(chat_file, title, user_name, platform):
 
     return html
 
-platform = input("La chat è stata esportata da Android o iOS? (A/i): ").strip().lower()
-chat_file = 'chat.txt'
-title = input("Inserisci il titolo della chat (premere Invio per usare il valore predefinito 'Chat WhatsApp'): ") or 'Chat WhatsApp'
-user_name = input("Inserisci il tuo nome: ")
+run_program = 1
+platform = input("Was the chat exported from Android or iOS? (A/i): ").strip().lower()
 
-html = generate_html(chat_file, title, user_name, platform)
+if os.path.exists('chat.txt'):
+    chat_file = 'chat.txt'
+elif os.path.exists('_chat.txt'):
+    chat_file = '_chat.txt'
+else:
+    run_program = 0
+    print("Neither 'chat.txt' nor '_chat.txt' was found.")
 
-with open('chat.html', 'w', encoding='utf-8') as file:
-    file.write(html)
+if run_program:
+    title = input("Enter the chat title (or press Enter to use the default value 'WhatsApp Chat'): ") or 'Chat WhatsApp'
+    user_name = input("Enter your chat name: ")
+
+    html = generate_html(chat_file, title, user_name, platform)
+
+    with open('chat.html', 'w', encoding='utf-8') as file:
+        file.write(html)
