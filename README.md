@@ -12,9 +12,10 @@ Give it a shot! Embrace the freedom of deleting those old chats from WhatsApp wh
 3. Download the WhatsApp background image from the following URL: [WhatsApp Background Image](https://i.pinimg.com/originals/97/c0/07/97c00759d90d786d9b6096d274ad3e07.png).
 4. Place the downloaded image in the same folder as the script and rename it as 'wallpaper.png'.
 5. Move all the media files referenced in the chat into a folder named 'media' in the same folder as the script. You can do this manually or using the media_mover script (which will automatically create a 'media' folder).
-    '''bash
+   '''bash
    python3 media_mover.py
-
-6. Execute the script by running the following command in the terminal: 
+   '''
+6. Execute the script by running the following command in the terminal:
    '''bash
    python3 whatsapp_txt_to_html.py
+   '''
