@@ -172,7 +172,7 @@ if run_program:
         print("1:    25/06/24, 21:10 - Person 1: Hello\n2:    01.10.20, 11:03 - Person 1: Hello")
         date_format = input("Which of these two examples looks more like your chat txt file (1/2)? ").strip()
     else:
-        date_format = '0';
+        date_format = '0'
     title = input("Enter the chat title (or press Enter to use the default value 'WhatsApp Chat'): ") or 'Chat WhatsApp'
     user_name = input("Enter your chat name: ")
 
