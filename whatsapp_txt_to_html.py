@@ -6,7 +6,7 @@ def convert_media(message, media_dir, platform):
     if platform == 'i':
         media = re.search(r'<allegato: (.*?)>', message)
     elif platform == 'a':
-        media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4|3gp))', message)
+        media = re.search(r'(\(\w+ (omessi|file non presente)\))|(\w+(?:-\w+)*\.(opus|webp|jpg|mp4|3gp|vcf|csv))', message)
     else:
         media = None
 
@@ -20,6 +20,8 @@ def convert_media(message, media_dir, platform):
             return f'<br><video width="200" controls><source src="./media/{media}" type="video/{media[-3:]}"></video><br>'
         elif media.endswith('opus'):
             return f'<audio controls><source src="./media/{media}" type="audio/ogg"></audio><br>'
+        elif media.endswith(('vcf', 'csv')):
+            return f'<br><a href="./media/{media}" download>{media}</a><br>'
         else:
             return f'<div style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px; text-align: left; display: inline-block;">File non presente ({media})</div><br>'
     return ''
