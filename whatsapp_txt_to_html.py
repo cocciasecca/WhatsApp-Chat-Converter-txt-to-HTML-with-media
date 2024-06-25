@@ -24,7 +24,7 @@ def convert_media(message, media_dir, platform):
             return f'<div style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px; text-align: left; display: inline-block;">File non presente ({media})</div><br>'
     return ''
 
-def generate_html(chat_file, title, user_name, platform):
+def generate_html(chat_file, title, user_name, platform, date_format):
     media_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media')
     participants = set()
     participant_colors = {}
@@ -37,7 +37,10 @@ def generate_html(chat_file, title, user_name, platform):
             line = line.strip()
             if line:
                 if platform == 'a':
-                    message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
+                    if date_format == '1':
+                        message_match = re.search(r'(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
+                    elif date_format == '2':
+                        message_match = re.search(r'(\d{2}.\d{2}.\d{2}), (\d{2}:\d{2}) - (.*?)(?=:|$)(?:: )?(.*)', line)
                 elif platform == 'i':
                     message_match = re.search(r'\[(\d{2}/\d{2}/\d{2}), (\d{2}:\d{2}):\d{2}\] (.*?)(?=:|$)(?:: )?(.*)', line)
                 else:
@@ -165,10 +168,12 @@ else:
     print("Neither 'chat.txt' nor '_chat.txt' was found.")
 
 if run_program:
+    print("1:    25/06/24, 21:10 - Person 1: Hello\n2:    01.10.20, 11:03 - Person 1: Hello")
+    date_format = input("Which of these two examples looks more like your chat txt file (1/2)? ").strip()
     title = input("Enter the chat title (or press Enter to use the default value 'WhatsApp Chat'): ") or 'Chat WhatsApp'
     user_name = input("Enter your chat name: ")
 
-    html = generate_html(chat_file, title, user_name, platform)
+    html = generate_html(chat_file, title, user_name, platform, date_format)
 
     with open('chat.html', 'w', encoding='utf-8') as file:
         file.write(html)
