@@ -4,7 +4,7 @@ Are you tired of dealing with the hassle of converting your old WhatsApp chats i
 
 With this tool, you can effortlessly convert your TXT files, along with all the media, into sleek and easily digestible HTML format. Say goodbye to the headache of deciphering messy TXT exports and hello to organized and visually appealing chat history. It's like waving a magic wand and transforming chaos into order!
 
-**Give it a shot!** Embrace the freedom of deleting those old chats from WhatsApp while still preserving your memories in a neat and accessible format. This tool is a real game-changer, designed to make your life simpler. So why wait? Experience the convenience and efficiency of converting your chats to HTML with just a few clicks.
+Give it a shot! Embrace the freedom of deleting those old chats from WhatsApp while still preserving your memories in a neat and accessible format. This tool is a real game-changer, designed to make your life simpler. So why wait? Experience the convenience and efficiency of converting your chats to HTML with just a few clicks.
 
 ## Getting Started
 
@@ -33,13 +33,3 @@ Make sure you have Python installed on your system. You can download it from [py
 
 ### ❓ Why are some characters like 'à' or 'é' not displayed correctly on the first page loading?
 Try to refresh the page one or two times. In some languages, certain characters may not display correctly on the initial page load. Refreshing the page usually resolves this issue and ensures all characters are displayed properly.
-
-## 💬 Feedback
-We'd love to hear your feedback! If you encounter any issues or have suggestions for improvements, please open an issue on [GitHub](https://github.com/yourusername/whatsapp-chat-converter/issues).
-
-## 🎉 Contribute
-Want to make this project even better? Feel free to fork the repository and submit a pull request with your enhancements. Contributions are always welcome!
-
----
-
-Made with ❤️ by [Your Name](https://github.com/yourusername)
