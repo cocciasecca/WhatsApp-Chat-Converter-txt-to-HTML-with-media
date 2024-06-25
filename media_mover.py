@@ -29,15 +29,23 @@ def move_media(media_list_file, media_dir):
         else:
             print(f"File '{media}' not found.")
 
-chat_file = 'chat.txt'
-media_list_file = 'media_list.txt'
-print("Created media list txt file.")
+if os.path.exists('chat.txt'):
+    chat_file = 'chat.txt'
+elif os.path.exists('_chat.txt'):
+    chat_file = '_chat.txt'
+else:
+    run_program = 0
+    print("Neither 'chat.txt' nor '_chat.txt' was found.")
 
-extract_media(chat_file, media_list_file)
-
-media_dir = 'media'
-move_media(media_list_file, media_dir)
-
-respond = input("Do you want to keep the media_list.txt file, with all the media listed?(Y/N): ").strip().lower()
-if respond == 'n':
-    os.remove("media_list.txt")
+if run_program:
+    media_list_file = 'media_list.txt'
+    print("Created media list txt file.")
+    
+    extract_media(chat_file, media_list_file)
+    
+    media_dir = 'media'
+    move_media(media_list_file, media_dir)
+    
+    respond = input("Do you want to keep the media_list.txt file, with all the media listed?(Y/N): ").strip().lower()
+    if respond == 'n':
+        os.remove("media_list.txt")
