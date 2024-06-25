@@ -21,7 +21,7 @@ def convert_media(message, media_dir, platform):
         elif media.endswith('opus'):
             return f'<audio controls><source src="./media/{media}" type="audio/ogg"></audio><br>'
         elif media.endswith(('vcf', 'csv')):
-            return f'<br><a href="./media/{media}" download>{media}</a><br>'
+            return f'<br><div style="background-color: #f2f2f2; border-radius: 5px; padding: 5px; display: inline-block;"><a href="./media/{media}" download>{media}</a></div><br>'
         else:
             return f'<div style="background-color: rgb(64, 65, 78); border-radius: 10px; padding: 5px; text-align: left; display: inline-block;">File non presente ({media})</div><br>'
     return ''
