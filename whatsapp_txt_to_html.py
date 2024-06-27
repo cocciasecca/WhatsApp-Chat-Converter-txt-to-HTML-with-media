@@ -144,6 +144,7 @@ def generate_html(chat_file, title, user_name, platform, date_format):
                 display: inline-block;
             }}
         </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body>
         <div class="container">
