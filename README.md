@@ -28,8 +28,3 @@ Make sure you have Python installed on your system. You can download it from [py
     ```bash
     python3 whatsapp_txt_to_html.py
     ```
-
-## 📋 FAQ
-
-### ❓ Why are some characters like 'à' or 'é' not displayed correctly on the first page loading?
-Try to refresh the page one or two times. In some languages, certain characters may not display correctly on the initial page load. Refreshing the page usually resolves this issue and ensures all characters are displayed properly.
