@@ -50,6 +50,9 @@ def generate_html(chat_file, title, user_name, platform, date_format):
 
                 if message_match:
                     date, time, sender, content = message_match.groups()
+                    
+                    content = re.sub(r'(https?://[^\s]+)', r'<a href="\1" target="_blank" style="color: #00aaff;">\1</a>', content) # Makes http and https links clickable
+                    
                     participants.add(sender)
 
                     if sender not in participant_colors:
