@@ -1,6 +1,8 @@
 import os
 import re
 
+run_program = 1
+
 def extract_media(chat_file, media_list_file):
     media_list = []
 
