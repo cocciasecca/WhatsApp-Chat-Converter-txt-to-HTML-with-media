@@ -186,3 +186,9 @@ if run_program:
 
     with open('chat.html', 'w', encoding='utf-8') as file:
         file.write(html)
+    
+    if not os.path.exists('wallpaper.png'):
+        urllib.request.urlretrieve(
+            "https://i.pinimg.com/originals/97/c0/07/97c00759d90d786d9b6096d274ad3e07.png",
+            "wallpaper.png"
+        )
